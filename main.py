@@ -1,9 +1,12 @@
+import os
+
 # برنامج بسيط لطباعة رسالة ترحيبية وحساب مجموع رقمين
 def main():
     print("مرحباً بك في أول مشروع لك على GitHub Codespaces!")
-    # إدخال رقمين من المستخدم
-    num1 = float(input("Enter The Number one: "))
-    num2 = float(input("Enter The Number Tow: "))
+
+    # بدلاً من input() يمكننا استخدام قيم ثابتة أو متغيرات بيئية
+    num1 = float(os.getenv('NUM1', 5))  # استخدام قيمة افتراضية 5 إذا لم يتم تحديد NUM1
+    num2 = float(os.getenv('NUM2', 3))  # استخدام قيمة افتراضية 3 إذا لم يتم تحديد NUM2
     
     # حساب المجموع
     total = num1 + num2
