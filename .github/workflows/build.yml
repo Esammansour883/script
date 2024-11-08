@@ -1,24 +1,62 @@
-name: Python application
+name: Build Python Executable
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # سيعمل على Linux أولاً
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set environment variables
-      run: |
-        echo "NUM1=10" >> $GITHUB_ENV
-        echo "NUM2=20" >> $GITHUB_ENV
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-    - name: Run script
-      run: python main.py
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+
+    - name: Build Executable for Linux
+      run: |
+        pyinstaller --onefile main.py
+        mv dist/main ./main_linux
+
+    - name: Upload Linux Executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-executable
+        path: main_linux
+
+  build-windows:
+    runs-on: windows-latest  # سيعمل على Windows
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+
+    - name: Build Executable for Windows
+      run: |
+        pyinstaller --onefile main.py
+        mv dist/main.exe ./main_windows.exe
+
+    - name: Upload Windows Executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-executable
+        path: main_windows.exe
